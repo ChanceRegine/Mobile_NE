@@ -1,50 +1,114 @@
-# Welcome to your Expo app 👋
+# LexiDict - Dictionary Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A cross-platform dictionary app built with React Native and Expo.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Word search with Axios and the Free Dictionary API
+- Detailed word view with phonetics, parts of speech, definitions, and examples
+- Audio pronunciation with Expo AV
+- Local search history with AsyncStorage
+- Drawer navigation for Search and History
+- Loading, empty, and error states
 
-   ```bash
-   npm install
-   ```
+## Project Structure
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```text
+App.js
+src/
+  components/
+  context/
+  navigation/
+  screens/
+  services/
+  storage/
+  utils/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Clean Submission Notes
 
-## Learn more
+- The project uses a single navigation system with React Navigation.
+- Unused Expo Router starter files and template components were removed.
+- Only the dictionary app files and required dependencies are kept.
 
-To learn more about developing your project with Expo, look at the following resources:
+## API Endpoint
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- `GET https://api.dictionaryapi.dev/api/v2/entries/en/{word}`
 
-## Join the community
+## Screens
 
-Join our community of developers creating universal apps.
+- Search Screen
+- Word Detail Screen
+- History Screen
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Entities / Models
+
+- `DictionaryEntry`
+- `Phonetic`
+- `Meaning`
+- `Definition`
+- `SearchHistoryItem`
+
+## Flow Diagram
+
+```mermaid
+flowchart TD
+  A[Open App] --> B[Search Screen]
+  B --> C[Validate Input]
+  C -->|Invalid| D[Show Validation Message]
+  C -->|Valid| E[Axios GET Free Dictionary API]
+  E -->|Success| F[Store Recent Search]
+  F --> G[Open Word Detail Screen]
+  G --> H[Show Definitions, Examples, Audio]
+  E -->|404| I[Word Not Found Message]
+  E -->|Network/Server Error| J[Error Message + Retry]
+  B --> K[Tap History Item]
+  K --> E
+```
+
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+  APP[App.js] --> NAV[React Navigation Drawer + Stack]
+  NAV --> UI[React Native Screens]
+  UI --> SVC[Dictionary API Service]
+  UI --> STG[AsyncStorage History]
+  UI --> AUD[Expo AV Audio Player]
+  SVC --> API[Free Dictionary API]
+  STG --> UI
+  AUD --> OS[Device Audio Output]
+```
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Start the app:
+
+```bash
+npm start
+```
+
+3. Run on Android:
+
+```bash
+npm run android
+```
+
+4. Run on iOS:
+
+```bash
+npm run ios
+```
+
+## Notes
+
+- Search accepts English words only.
+- Search history is stored locally and persists after restart.
+- Audio playback uses the first valid pronunciation audio returned by the API.
+- The app is ready for Android, iOS, and web through Expo.
